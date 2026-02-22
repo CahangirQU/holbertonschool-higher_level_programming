@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-"""Define a class Square."""
-
-
-class Square:
-    """Represent a square."""
-    pass
+def print_list_integer(my_list=[]):
+    for i in my_list:
+        print("{:d}".format(i))
