@@ -1,113 +1,70 @@
 #!/usr/bin/python3
-
-"""
-Shapes, Interfaces, and Duck Typing
-"""
-
+"""Module that defines Shape ABC, Circle, Rectangle, and shape_info."""
 from abc import ABC, abstractmethod
 import math
 
 
 class Shape(ABC):
-    """
-    Shape Abstract method to build geometric shape
+    """Abstract base class for shapes."""
 
-    Args:
-        ABC (class): Baseclass to build abstract method
-    """
     @abstractmethod
     def area(self):
-        """
-        area empty (set up the abstrat method)
-        """
+        """Return the area of the shape."""
         pass
 
     @abstractmethod
     def perimeter(self):
-        """
-        perimeter empty (set up the abstrat method)
-        """
+        """Return the perimeter of the shape."""
         pass
 
 
 class Circle(Shape):
-    """
-    Circle Class representing a circle shape
-        inherit from abstract method Shape
-
-    Args:
-        radius (int): The radius of the circle.
-    """
+    """A Circle class that inherits from Shape."""
 
     def __init__(self, radius):
-        """
-        __init__ Build the object
+        """Initialize Circle with a radius.
 
         Args:
-            radius (int): Radius of the circle
+            radius (float): The radius of the circle.
         """
-        self.radius = radius
+        self.radius = abs(radius)
 
     def area(self):
-        """
-        area calculation = pi * r^2
-
-        Returns:
-            int: area of the circle
-        """
-        result = math.pi * self.radius ** 2
-        return (result)
+        """Return the area of the circle."""
+        return math.pi * self.radius ** 2
 
     def perimeter(self):
-        """
-        perimeter calculation = 2 * pi * r
-
-        Returns:
-            int: perimeter
-        """
-        result = 2 * math.pi * self.radius
-        return (result)
+        """Return the perimeter (circumference) of the circle."""
+        return 2 * math.pi * self.radius
 
 
 class Rectangle(Shape):
-    """
-    Rectangle Class representing a rectangle shape
-        inherit from abstract method Shape
-
-    Args:
-        width (int): The width of the rectangle.
-        height (int): The height of the rectangle.
-    """
+    """A Rectangle class that inherits from Shape."""
 
     def __init__(self, width, height):
-        """
-        __init__ Constructor of the rectangle
+        """Initialize Rectangle with width and height.
 
         Args:
-            width (int): width
-            height (int): height
+            width (float): The width of the rectangle.
+            height (float): The height of the rectangle.
         """
         self.width = width
         self.height = height
 
     def area(self):
-        """ Area calculation = W * H """
-        return self.width * self.height
+        """Return the area of the rectangle."""
+        return float(self.width * self.height)
 
     def perimeter(self):
-        """ Perimeter calculation = 2*W + 2*H """
-        return (self.width * 2) + (self.height * 2)
+        """Return the perimeter of the rectangle."""
+        return float(2 * (self.width + self.height))
 
 
-def shape_info(item):
-    """
-    shape_info Retrieve information about a shape
+def shape_info(shape):
+    """Print the area and perimeter of a shape.
 
     Args:
-        item (obj): Instance of a shape
+        shape: Any object that implements area() and perimeter().
     """
-    result_area = item.area()
-    result_perimeter = item.perimeter()
-
-    print(f"Area: {result_area}")
-    print(f"Perimeter: {result_perimeter}")
+    print("Area: {}".format(shape.area()))
+    print("Perimeter: {}".format(shape.perimeter()))
