@@ -1,22 +1,24 @@
 #!/usr/bin/python3
 """
-that deletes all State objects with a name containing
-the letter a from the database hbtn_0e_6_usa
+prints the State object with the name passed as argument
+from the database hbtn_0e_6_usa
 """
 
 from sqlalchemy import (create_engine)
 import sys
 from model_state import Base, State
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import delete
 
 if __name__ == "__main__":
 
     # Check input arguments
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print(f"Usage: {sys.argv[0]} "
-              "<mysql username> <mysql password> <database name>")
+              "<mysql username> <mysql password> <database name>"
+              "<state name to search>")
         sys.exit(1)
+
+    searched_state = sys.argv[4]
 
     # DB connection
     engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
@@ -29,7 +31,14 @@ if __name__ == "__main__":
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    delete_state = delete(State).where(State.name.like('%a%'))
-    session.execute(delete_state)
-    session.commit()
+    # Query and print the first states
+    states = session.query(State).filter(State.name == searched_state).all()
+
+    if states:
+        for state in states:
+            print(f"{state.id}")
+            break
+    else:
+        print("Not found")
+
     session.close()

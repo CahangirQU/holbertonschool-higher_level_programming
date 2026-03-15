@@ -1,23 +1,56 @@
 #!/usr/bin/python3
-# Displays all cities of a given state from the
-# states table of the database hbtn_0e_4_usa.
-# Safe from SQL injections.
-import sys
+"""
+Listing all the states from a db
+"""
+
 import MySQLdb
+import sys
 
 if __name__ == "__main__":
-    db = MySQLdb.connect(host="localhost", port=3306,
-                         user=sys.argv[1],
-                         passwd=sys.argv[2],
-                         db=sys.argv[3])
 
-    c = db.cursor()
+    # Check input arguments
+    if len(sys.argv) != 5:
+        print(f"Usage: {sys.argv[0]} "
+              "<username> <password> <database> <state name>")
+        sys.exit(1)
 
-    c.execute("""SELECT cities.name
-                 FROM cities
-                 JOIN states ON cities.state_id = states.id
-                 WHERE states.name = %s
-                 ORDER BY cities.id ASC""", (sys.argv[4],))
+    # Catch db credentials
+    MY_HOST = "localhost"
+    MY_USER = sys.argv[1]
+    MY_PASS = sys.argv[2]
+    MY_DB = sys.argv[3]
+    state_name = sys.argv[4]
 
-    rows = c.fetchall()
-    print(", ".join([row[0] for row in rows]))
+    # Connection to DB
+    db = MySQLdb.connect(host=MY_HOST,
+                         user=MY_USER,
+                         passwd=MY_PASS,
+                         db=MY_DB,
+                         port=3306
+                         )
+
+    # Cursor creation to execute SQL queries
+    cursor = db.cursor()
+
+    # SQL query
+    query = """
+        SELECT cities.name
+        FROM cities
+        JOIN states ON cities.state_id = states.id
+        WHERE states.name = %s
+        ORDER BY cities.id ASC
+    """
+
+    # Print results in comma delimited format
+    cursor.execute(query, (state_name,))
+    rows = cursor.fetchall()
+    result = ""
+    for row in rows:
+        if result:
+            result += ", "
+        result += row[0]
+    print(result)
+
+    # Close connection with db
+    cursor.close()
+    db.close()

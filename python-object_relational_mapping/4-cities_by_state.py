@@ -1,27 +1,47 @@
-
 #!/usr/bin/python3
 """
-Lists all cities from the database hbtn_0e_4_usa.
+Listing states from a db
 """
+
 import MySQLdb
 import sys
 
-
 if __name__ == "__main__":
-    db = MySQLdb.connect(
-        host="localhost",
-        port=3306,
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        db=sys.argv[3]
+
+    # Check input arguments
+    if len(sys.argv) != 4:
+        print(f"Usage: {sys.argv[0]} "
+              "<username> <password> <database>")
+        sys.exit(1)
+
+    # Catch db credentials
+    MY_HOST = "localhost"
+    MY_USER = sys.argv[1]
+    MY_PASS = sys.argv[2]
+    MY_DB = sys.argv[3]
+
+    # Connection to DB
+    db = MySQLdb.connect(host=MY_HOST,
+                         user=MY_USER,
+                         passwd=MY_PASS,
+                         db=MY_DB,
+                         port=3306
+                         )
+
+    # Cursor creation to execute SQL queries
+    cursor = db.cursor()
+
+    # Print results in comma delimited format
+    cursor.execute(
+        "SELECT cities.id, cities.name, states.name "
+        "FROM cities "
+        "JOIN states ON cities.state_id = states.id "
+        "ORDER BY cities.id ASC"
     )
-    cur = db.cursor()
-    # JOIN istifadə edərək şəhərləri ştat adları ilə birlikdə gətiririk
-    cur.execute("SELECT cities.id, cities.name, states.name \
-FROM cities JOIN states ON cities.state_id = states.id \
-ORDER BY cities.id ASC")
-    rows = cur.fetchall()
+    rows = cursor.fetchall()
     for row in rows:
         print(row)
-    cur.close()
+
+    # Close connection with db
+    cursor.close()
     db.close()

@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 """
-that deletes all State objects with a name containing
-the letter a from the database hbtn_0e_6_usa
+adds the State object “Louisiana” to the database hbtn_0e_6_usa
 """
 
 from sqlalchemy import (create_engine)
 import sys
 from model_state import Base, State
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import delete
+from sqlalchemy import insert
 
 if __name__ == "__main__":
 
@@ -29,7 +28,17 @@ if __name__ == "__main__":
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    delete_state = delete(State).where(State.name.like('%a%'))
-    session.execute(delete_state)
+    add_state = insert(State).values(name='Louisiana')
+    session.execute(add_state)
     session.commit()
+
+    # Query and print the Louisiana state_id
+    states = session.query(State).order_by(State.id).filter(
+        State.name == 'Louisiana').all()
+    if states:
+        for state in states:
+            print(f"{state.id}")
+            break
+    else:
+        print("Not found")
     session.close()

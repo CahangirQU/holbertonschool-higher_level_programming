@@ -1,14 +1,12 @@
 #!/usr/bin/python3
 """
-that deletes all State objects with a name containing
-the letter a from the database hbtn_0e_6_usa
+lists all State objects from the database hbtn_0e_6_usa
 """
 
 from sqlalchemy import (create_engine)
 import sys
 from model_state import Base, State
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import delete
 
 if __name__ == "__main__":
 
@@ -29,7 +27,7 @@ if __name__ == "__main__":
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    delete_state = delete(State).where(State.name.like('%a%'))
-    session.execute(delete_state)
-    session.commit()
+    # Query and print all states
+    for state in session.query(State).order_by(State.id):
+        print(f"{state.id}: {state.name}")
     session.close()
